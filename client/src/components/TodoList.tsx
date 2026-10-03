@@ -22,6 +22,22 @@ const TodoList = () => {
       console.error("Error fetching tasks:", error);
     }
   };
+
+  const handleDelete = async (id: string) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this task?",
+    );
+
+    if (!isConfirmed) return;
+
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+
+      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
   return (
     <>
       <div className="table-container">
@@ -43,8 +59,9 @@ const TodoList = () => {
             </div>
             <div
               className="table-cell"
-              style={{ display: "flex", gap: "0.5rem" }}
-            ></div>
+              style={{ display: "flex", gap: "0.5rem" }}>
+              <button onClick={() => handleDelete(task._id)}>Delete</button>
+            </div>
           </div>
         ))}
       </div>
