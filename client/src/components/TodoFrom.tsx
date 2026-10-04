@@ -10,6 +10,7 @@ const TodoForm = ({ initialTask, onSubmit, onCancel }: TaskFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isDone, setIsDone] = useState(false);
+  const [titleError, setTitleError] = useState("");
 
   useEffect(() => {
     if (initialTask) {
@@ -19,21 +20,33 @@ const TodoForm = ({ initialTask, onSubmit, onCancel }: TaskFormProps) => {
     } else {
       setTitle("");
       setDescription("");
-      setIsDone(false); 
+      setIsDone(false);
     }
+    setTitleError("");
   }, [initialTask]);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const trimmedTitle = title.trim(); /*form validation for title field*/
+    if (!trimmedTitle) {
+      setTitleError("Title is required");
+      return;
+    }
+
+    if (trimmedTitle.length < 3) {
+      setTitleError("Title must be at least 3 characters");
+      return;
+    }
+    setTitleError("");
     onSubmit(title.trim(), description.trim(), isDone);
   };
+ 
 
   return (
     <>
       <form onSubmit={handleSubmit}>
-         <h3 >
-        {initialTask ? "Edit Task" : "Add New Task"}
-      </h3>
+        <h3>{initialTask ? "Edit Task" : "Add New Task"}</h3>
         <div>
           <label>
             Title <span>*</span>
@@ -44,8 +57,14 @@ const TodoForm = ({ initialTask, onSubmit, onCancel }: TaskFormProps) => {
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
+              setTitleError("");
             }}
           />
+              {titleError && (
+          <span style={{ color: "red", fontSize: "0.85rem", marginTop: "0.25rem", display: "block" }}>
+            {titleError}
+          </span>
+        )}
         </div>
         <div>
           <label>
@@ -60,16 +79,16 @@ const TodoForm = ({ initialTask, onSubmit, onCancel }: TaskFormProps) => {
           />
         </div>
 
-      <div className="status-field">
-        <label>
-          <input
-            type="checkbox"
-            checked={isDone}
-            onChange={(e) => setIsDone(e.target.checked)}
-          />
-          <span>Done</span>
-        </label>
-      </div>
+        <div className="status-field">
+          <label>
+            <input
+              type="checkbox"
+              checked={isDone}
+              onChange={(e) => setIsDone(e.target.checked)}
+            />
+            <span>Done</span>
+          </label>
+        </div>
         <button type="submit">
           {" "}
           {initialTask ? "Update Task" : "Save Task"}
