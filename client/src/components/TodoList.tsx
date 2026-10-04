@@ -38,6 +38,29 @@ const TodoList = () => {
       console.error("Error deleting task:", error);
     }
   };
+
+  const handleToggleDone = async (task: Task) => {
+    try {
+      const response = await axios.put(`${API_URL}/${task._id}`, {
+        title: task.title,
+        description: task.description,
+        done: !task.done,
+      });
+
+      const responseData = response.data.data || response.data;      
+      const updatedTask: Task = {
+        ...task,
+        ...responseData,
+        _id: task._id,
+      };
+
+      setTasks((prevTasks) =>
+        prevTasks.map((t) => (t._id === task._id ? updatedTask : t)),
+      );
+    } catch (error) {
+      console.error("Error updating Toggle status:", error);
+    }
+  };
   return (
     <>
       <div className="table-container">
@@ -60,6 +83,9 @@ const TodoList = () => {
             <div
               className="table-cell"
               style={{ display: "flex", gap: "0.5rem" }}>
+             <button onClick={() => handleToggleDone(task)}>
+              {"Toggle Status "}
+            </button>
               <button onClick={() => handleDelete(task._id)}>Delete</button>
             </div>
           </div>
