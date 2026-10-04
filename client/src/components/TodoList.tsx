@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import type { Task } from "../models/todo";
+import TodoForm from "./TodoFrom";
 import axios from "axios";
+
 
 const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [showAddForm, setShowAddForm] = useState(false);
   const API_URL = "http://localhost:8000/api/todos";
 
   useEffect(() => {
@@ -61,9 +64,36 @@ const TodoList = () => {
       console.error("Error updating Toggle status:", error);
     }
   };
+
+const handleCancel = () => {
+  setShowAddForm(false);
+};
+
+const handleSubmitTask = () => {};
+  
+
   return (
     <>
       <div className="table-container">
+         <div>            
+        {!showAddForm && (
+          <button
+            onClick={() => {            
+              setShowAddForm(true);
+            }}
+          >
+            Add New Task
+          </button>
+        )}
+         </div>
+              {showAddForm && (
+        <TodoForm  
+           initialTask={null}
+          onSubmit={handleSubmitTask}
+          onCancel={handleCancel} 
+        />
+      )}
+        
         <div className="table-row table-header">
           <div className="table-cell">Title</div>
           <div className="table-cell">Description</div>
