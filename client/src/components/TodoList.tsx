@@ -69,7 +69,26 @@ const handleCancel = () => {
   setShowAddForm(false);
 };
 
-const handleSubmitTask = () => {};
+  const handleSubmitTask = async (
+    title: string,
+    description: string,
+    isDone: boolean,
+  ): Promise<void> => {
+    try {
+      const response = await axios.post(API_URL, {
+        title,
+        description,
+        done: isDone,
+      });
+
+      const createdTask = response.data.data || response.data;
+
+      setTasks((prevTasks) => [...prevTasks, createdTask]);
+      setShowAddForm(false);
+    } catch (error) {
+      console.error("Error saving task:", error);
+    }
+  };
   
 
   return (
