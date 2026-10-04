@@ -7,6 +7,7 @@ import axios from "axios";
 const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const API_URL = "http://localhost:8000/api/todos";
 
   useEffect(() => {
@@ -66,7 +67,8 @@ const TodoList = () => {
   };
 
 const handleCancel = () => {
-  setShowAddForm(false);
+    setEditingTask(null);
+    setShowAddForm(false);
 };
 
   const handleSubmitTask = async (
@@ -75,6 +77,31 @@ const handleCancel = () => {
     isDone: boolean,
   ): Promise<void> => {
     try {
+  if (editingTask && editingTask._id) {
+        const response = await axios.put(`${API_URL}/${editingTask._id}`, {        
+          title,
+          description,
+          done: isDone,
+        });
+
+        const responseData = response.data.data || response.data;
+           
+        const updatedTask: Task = {
+          ...editingTask,
+          ...responseData,
+          _id: editingTask._id,
+        };
+
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task._id === editingTask._id ? updatedTask : task,
+          ),
+        );
+
+        setEditingTask(null);
+        setShowAddForm(false);
+        return;
+      }
       const response = await axios.post(API_URL, {
         title,
         description,
@@ -89,6 +116,12 @@ const handleCancel = () => {
       console.error("Error saving task:", error);
     }
   };
+
+    const handleEdit = (task: Task) => {
+     console.log("Editing task:", task);
+    setEditingTask(task);
+    setShowAddForm(true);
+  };
   
 
   return (
@@ -97,7 +130,8 @@ const handleCancel = () => {
          <div>            
         {!showAddForm && (
           <button
-            onClick={() => {            
+            onClick={() => {  
+              setEditingTask(null);          
               setShowAddForm(true);
             }}
           >
@@ -107,7 +141,7 @@ const handleCancel = () => {
          </div>
               {showAddForm && (
         <TodoForm  
-           initialTask={null}
+          initialTask={editingTask}
           onSubmit={handleSubmitTask}
           onCancel={handleCancel} 
         />
@@ -134,8 +168,9 @@ const handleCancel = () => {
               style={{ display: "flex", gap: "0.5rem" }}>
              <button onClick={() => handleToggleDone(task)}>
               {"Toggle Status "}
-            </button>
+             </button>
               <button onClick={() => handleDelete(task._id)}>Delete</button>
+              <button onClick={() => handleEdit(task)}>Edit</button>
             </div>
           </div>
         ))}

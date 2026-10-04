@@ -31,7 +31,9 @@ const TodoForm = ({ initialTask, onSubmit, onCancel }: TaskFormProps) => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <h2>Add New Task</h2>
+         <h3 >
+        {initialTask ? "Edit Task" : "Add New Task"}
+      </h3>
         <div>
           <label>
             Title <span>*</span>
