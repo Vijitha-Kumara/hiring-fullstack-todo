@@ -117,8 +117,7 @@ const handleCancel = () => {
     }
   };
 
-    const handleEdit = (task: Task) => {
-     console.log("Editing task:", task);
+    const handleEdit = (task: Task) => { 
     setEditingTask(task);
     setShowAddForm(true);
   };
@@ -129,7 +128,7 @@ const handleCancel = () => {
       <div className="table-container">
          <div>            
         {!showAddForm && (
-          <button
+          <button  className="add-task-button"
             onClick={() => {  
               setEditingTask(null);          
               setShowAddForm(true);
@@ -164,8 +163,7 @@ const handleCancel = () => {
               </span>
             </div>
             <div
-              className="table-cell"
-              style={{ display: "flex", gap: "0.5rem" }}>
+               className="task-actions">
              <button onClick={() => handleToggleDone(task)}>
               {"Toggle Status "}
              </button>

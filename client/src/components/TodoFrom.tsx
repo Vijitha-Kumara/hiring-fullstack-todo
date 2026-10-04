@@ -41,7 +41,6 @@ const TodoForm = ({ initialTask, onSubmit, onCancel }: TaskFormProps) => {
     setTitleError("");
     onSubmit(title.trim(), description.trim(), isDone);
   };
- 
 
   return (
     <>
@@ -60,15 +59,15 @@ const TodoForm = ({ initialTask, onSubmit, onCancel }: TaskFormProps) => {
               setTitleError("");
             }}
           />
-              {titleError && (
-          <span style={{ color: "red", fontSize: "0.85rem", marginTop: "0.25rem", display: "block" }}>
+          {titleError && (
+            <span className="error-message">             
             {titleError}
-          </span>
-        )}
+            </span>
+          )}
         </div>
         <div>
           <label>
-            Description <span>*</span>
+            Description <span></span>
           </label>
           <textarea
             value={description}
@@ -86,7 +85,7 @@ const TodoForm = ({ initialTask, onSubmit, onCancel }: TaskFormProps) => {
               checked={isDone}
               onChange={(e) => setIsDone(e.target.checked)}
             />
-            <span>Done</span>
+            <span className="done-label">Done</span>
           </label>
         </div>
         <button type="submit">
