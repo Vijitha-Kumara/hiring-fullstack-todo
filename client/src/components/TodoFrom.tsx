@@ -60,18 +60,16 @@ const TodoForm = ({ initialTask, onSubmit, onCancel }: TaskFormProps) => {
           />
         </div>
 
-        <div>
-          <label>Status (Done)</label>
-          <select
-            value={String(isDone)}
-            onChange={(e) => {
-              setIsDone(e.target.value === "true");
-            }}
-          >
-            <option value="false">False (Pending)</option>
-            <option value="true">True (Completed)</option>
-          </select>
-        </div>
+      <div className="status-field">
+        <label>
+          <input
+            type="checkbox"
+            checked={isDone}
+            onChange={(e) => setIsDone(e.target.checked)}
+          />
+          <span>Done</span>
+        </label>
+      </div>
         <button type="submit">
           {" "}
           {initialTask ? "Update Task" : "Save Task"}

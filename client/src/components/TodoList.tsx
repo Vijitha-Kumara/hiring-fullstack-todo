@@ -160,7 +160,7 @@ const handleCancel = () => {
             <div className="table-cell">{task.description}</div>
             <div className="table-cell">
               <span className={`badge ${task.done}`}>
-                {task.done ? "True" : "False"}
+                {task.done ? "done" : "undone"}
               </span>
             </div>
             <div
